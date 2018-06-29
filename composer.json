@@ -1,0 +1,27 @@
+{
+    "name": "cosmicnames/namesilo-api",
+    "description": "PHP SDK for NameSilo API",
+    "keywords": [
+        "namesilo",
+        "namesilo sdk",
+        "namesilo api"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "CosmicNames Team",
+            "email": "info@cosmicnames.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CosmicNames\\NameSilo\\": "src/"
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}
