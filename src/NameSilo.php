@@ -63,11 +63,7 @@ class NameSilo
      *
      * @since v1.0.0
      */
-    public function __call($operation, $arguments) {
-       if (count($arguments) > 0) {
-           $arguments = $arguments[0];
-       } 
-
+    public function __call($operation, $arguments = []) {
        return $this->runQuery($operation, $arguments);
     }
 
@@ -75,15 +71,15 @@ class NameSilo
      * The executor. It will run API operation and get the data.
      *
      * @param string $operation operation name that will be called.
-     * @param string $arguments list of parameters that will be attached.
+     * @param array $arguments list of parameters that will be attached.
      *
      * @return mixed|\SimpleXMLElement results of API call
      *
      * @since v1.0.0
      */
-    protected function runQuery($operation, $arguments) {
+    protected function runQuery($operation, $arguments = []) {
         try {
-            $response = $this->client->post($operation, http_build_query($arguments, $this->authentication));
+            $response = $this->client->post($operation, array_merge($arguments, $this->authentication));
             return $this->parse($response);
         } catch(\Exception $error) {
             return $error;
