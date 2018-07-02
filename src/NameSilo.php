@@ -28,6 +28,11 @@ class NameSilo
      */
     private $authentication = [];
 
+	/**
+	 * @var
+	 */
+    private $base_uri;
+
     public function __construct($apiKey, $sandbox = false) 
     {
         $this->authentication = [
@@ -36,8 +41,10 @@ class NameSilo
             'key' => $apiKey
         ];
 
+        $this->base_uri = $sandbox ? self::API_SANDBOX_URL : self::API_URL;
+
         $this->client = new Client([
-            'base_uri' => $sandbox ? self::API_SANDBOX_URL : self::API_URL,
+            'base_uri' =>  $this->base_uri,
             'defaults' => [
                 'query' => $this->authentication
             ]
@@ -64,6 +71,10 @@ class NameSilo
      * @since v1.0.0
      */
     public function __call($operation, $arguments = []) {
+    	if (count($arguments) > 0) {
+    		$arguments = $arguments[0];
+	    }
+
        return $this->runQuery($operation, $arguments);
     }
 
@@ -78,12 +89,35 @@ class NameSilo
      * @since v1.0.0
      */
     protected function runQuery($operation, $arguments = []) {
-        try {
+        /*try {
             $response = $this->client->post($operation, array_merge($arguments, $this->authentication));
             return $this->parse($response);
         } catch(\Exception $error) {
             return $error;
-        }
+        }*/
+
+	    //  Initiate curl
+	    $ch = curl_init();
+
+	    // Disable SSL verification
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+	    // Will return the response, if false it print the response
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+	    // Set the url
+	    curl_setopt($ch, CURLOPT_URL, $this->base_uri . $operation .'?'. http_build_query(array_merge($arguments, $this->authentication)));
+
+	    // Execute
+	    $result = curl_exec($ch);
+
+	    // Close curl session
+	    curl_close($ch);
+
+	    //decode our xml data
+	    $xmlData = simplexml_load_string($result);
+
+	    return $xmlData;
     }
 
     /**
