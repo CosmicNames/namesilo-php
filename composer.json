@@ -13,9 +13,6 @@
             "email": "info@cosmicnames.com"
         }
     ],
-    "require": {
-        "guzzlehttp/guzzle": "~6.0"
-    },
     "autoload": {
         "psr-4": {
             "CosmicNames\\NameSilo\\": "src/"
