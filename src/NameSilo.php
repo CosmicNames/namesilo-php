@@ -28,7 +28,7 @@ class NameSilo
             'key' => $apiKey
         ];
 
-        $this->base_uri = $sandbox ? self::API_SANDBOX_URL : $batch ? self::API_BATCH : self::API_URL;
+        $this->base_uri = $sandbox ? self::API_SANDBOX_URL : ($batch ? self::API_BATCH : self::API_URL);
 
     }
 
